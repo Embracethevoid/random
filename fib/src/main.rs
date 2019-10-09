@@ -9,29 +9,36 @@ use std::time::{Instant};
 use num::pow::pow;
 
 fn fib(n: u64, map: &mut HashMap<u64, Rc<BigUint>>) -> Rc<BigUint> {
-    assert!(n > 0);
-    if let Some(v) = map.get(&n) {
-        return Rc::clone(v);
-    } else {
-        let res = if n % 2 == 0 {
-            let m_1 = fib(n  / 2 - 1, map).as_ref().clone();
-            let m = fib(n  / 2 , map).as_ref().clone();
-            let a_1 = fib(n  / 2 + 1, map).as_ref().clone();
-            Rc::new((m_1  + a_1)*m)
 
+    if let Some(r) = map.get(&n) {
+        Rc::clone(r)
+    } else {
+        let _res:BigUint = if n % 2 == 0 {
+            let m_1_rc = fib(n  / 2 - 1, map);
+            let m_1 = m_1_rc.as_ref();
+            let a_1_rc = fib(n  / 2 + 1, map);
+            let a_1 = a_1_rc.as_ref();
+            let m_rc = fib(n  / 2 , map);
+            let m = m_rc.as_ref();
+            (m_1  + a_1)*m
         } else {
-            let m_1 = fib((n - 1) / 2, map).as_ref().clone();
-            let a_1 = fib((n + 1) / 2, map).as_ref().clone();
-            Rc::new(pow(m_1,2) + pow(a_1,2))
+            let m_1_rc = fib(n  / 2 - 1, map);
+            let m_1 = m_1_rc.as_ref();
+            let a_1_rc = fib(n  / 2 + 1, map);
+            let a_1 = a_1_rc.as_ref();
+            m_1 * m_1 + a_1 * a_1
         };
+        let res = Rc::new(_res);
         map.insert(n, Rc::clone(&res));
-        return res;
+        res
     }
 }
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let target: i32 = args[1].parse().unwrap();
+    assert!(target > 0);
+
     let mut map = HashMap::new();
     map.insert(0, Rc::new(Zero::zero()));
     map.insert(1, Rc::new(One::one()));
@@ -42,7 +49,7 @@ fn main() {
 
     println!("Finished calculation in {:?}",duration);
 
-    println!("The {:?}th fibonacci number is {:?}", target,res.to_str_radix(10));
+//    println!("The {:?}th fibonacci number is {:?}", target,res.to_str_radix(10));
 }
 
 
