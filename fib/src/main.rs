@@ -6,7 +6,6 @@ use num::{Zero, One};
 use std::env;
 use std::rc::Rc;
 use std::time::{Instant};
-use num::pow::pow;
 
 fn fib(n: u64, map: &mut HashMap<u64, Rc<BigUint>>) -> Rc<BigUint> {
 
@@ -49,7 +48,7 @@ fn main() {
 
     println!("Finished calculation in {:?}",duration);
 
-//    println!("The {:?}th fibonacci number is {:?}", target,res.to_str_radix(10));
+    println!("The {:?}th fibonacci number is {:?}", target,res.to_str_radix(10));
 }
 
 
